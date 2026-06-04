@@ -14,6 +14,8 @@ from quart import (
     g,
 )
 
+from werkzeug.datastructures import CombinedMultiDict
+
 import flask_babel
 import flask_wtf
 from flask_babel import lazy_gettext as _l
@@ -147,3 +149,21 @@ class BaseForm(flask_wtf.FlaskForm):  # type:ignore
                 meta["locales"] = [str(locale)]
 
         super().__init__(*args, **kwargs)
+
+
+async def async_form(
+    form_class: type[flask_wtf.FlaskForm],
+    *args: typing.Any,
+    **kwargs: typing.Any,
+) -> flask_wtf.FlaskForm:
+    """
+    Adapt a synchronous form to work with quart's async requests. This is
+    typically only needed for files which include a file upload.
+    """
+    if "formdata" not in kwargs:
+        if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
+            form_data = await request.form
+            files_data = await request.files
+            kwargs["formdata"] = CombinedMultiDict([form_data, files_data])
+
+    return form_class(*args, **kwargs)
