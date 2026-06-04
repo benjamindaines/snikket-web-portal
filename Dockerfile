@@ -29,15 +29,15 @@ ENV SNIKKET_WEB_PROSODY_ENDPOINT=http://127.0.0.1:5280/
 
 WORKDIR /opt/snikket-web-portal
 
+COPY requirements.txt /opt/snikket-web-portal/requirements.txt
+
 RUN set -eu; \
     export DEBIAN_FRONTEND=noninteractive ; \
     apt-get update ; \
     apt-get install -y --no-install-recommends \
       netcat-traditional python3 python3-setuptools python3-pip \
-      python3-aiohttp python3-email-validator python3-flask-babel \
-      python3-flaskext.wtf python3-hsluv python3-hypercorn \
-      python3-quart python3-typing-extensions python3-wtforms ; \
-      pip3 install --break-system-packages environ-config quart_flask_patch; \
+      python3-typing-extensions ; \
+      pip3 install --break-system-packages -r requirements.txt; \
     apt-get remove -y --purge python3-pip python3-setuptools; \
     apt-get clean ; rm -rf /var/lib/apt/lists; \
     rm -rf /root/.cache;
