@@ -316,6 +316,9 @@ class InvitePost(BaseForm):
             (86400, _l("One day")),
             (7 * 86400, _l("One week")),
             (28 * 86400, _l("Four weeks")),
+            (365 * 86400, _l("One year")),
+            (5 * 365 * 86400, _l("Five years")),
+            (10 * 365 * 86400, _l("Ten years")),
         ],
         default=7 * 86400,
     )
